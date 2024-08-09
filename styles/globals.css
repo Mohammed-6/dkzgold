@@ -1,0 +1,86 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: 'Gilroy-Regular';
+  src: url('/font/Gilroy/Gilroy-Regular.ttf') format('truetype'); /* Chrome 4+, Firefox 3.5, Opera 10+, Safari 3—5 */
+} 
+@font-face {
+  font-family: 'Gilroy-Bold';
+  src: url('/font/Gilroy/Gilroy-Bold.ttf') format('truetype'); /* Chrome 4+, Firefox 3.5, Opera 10+, Safari 3—5 */
+} 
+
+body {
+  font-family: 'Gilroy-Regular';
+}
+
+.text-bold {
+  font-family: 'Gilroy-bold';
+}
+/* Hide the number input controls */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type=number] {
+    -moz-appearance: textfield; /* Firefox */
+}
+
+/* Range Slider as a Single Thumb Slider */
+.single-thumb .range-slider__thumb[data-lower] {
+  width: 0;
+}
+.single-thumb .range-slider__range {
+  border-radius: 6px;
+}
+
+@layer components {
+  .main-body {
+    /* @apply bg-gray-50 */
+  }
+  .card {
+    @apply bg-white rounded-sm rounded-t-md shadow-lg m-3 border-2 border-t-primary
+  }
+  .card-header {
+    @apply mb-2 text-lg shadow-sm p-2 w-full text-gray-700 bg-gray-50
+  }
+  .card-body {
+    @apply p-3 mt-3 bg-white
+  }
+  .btn {
+    @apply rounded-md px-6 py-2 text-green-500 font-bold bg-green-200 text-sm hover:cursor-pointer hover:shadow-md duration-300
+  }
+  .btn-primary {
+    @apply bg-green-200 text-green-500 font-bold hover:cursor-pointer
+  }
+  .btn-danger {
+    @apply bg-red-200 text-red-500 font-bold hover:cursor-pointer
+  }
+  .form-item {
+    @apply py-1
+  }
+  .form-input {
+    @apply rounded-md px-3 py-2 border text-gray-500 w-full
+  }
+  .form-label {
+      @apply flex items-center font-semibold text-gray-500
+  }
+  .form-textarea {
+    @apply w-full border rounded-md
+  }
+  .text-color {
+    @apply text-black
+  }
+  .font-color {
+    @apply text-black/60
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
