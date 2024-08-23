@@ -358,12 +358,12 @@ const GoldBS = () => {
   const [loading, setloading] = useState<boolean>(false);
 
   useEffect(() => {
-    if (
-      localStorage.getItem("dkz_gold_customer_token") === undefined ||
-      localStorage.getItem("dkz_gold_customer_token") === ""
-    ) {
-      // setshowlogin(true);
-    }
+    // if (
+    //   localStorage.getItem("dkz_gold_customer_token") === undefined ||
+    //   localStorage.getItem("dkz_gold_customer_token") === ""
+    // ) {
+    //   setshowlogin(true);
+    // }
     getGoldPrice().then(function (price) {
       // console.log(price.data.data.buy.goldPrice);
       setbuyprice(price.data.data.buy.goldPrice);
@@ -915,18 +915,20 @@ const GoldSell = (props: GBSProp) => {
   const [alert, setalert] = useState({ status: false, message: "" });
 
   useEffect(() => {
-    if (
-      localStorage.getItem("dkz_gold_customer_token") !== undefined ||
-      localStorage.getItem("dkz_gold_customer_token") !== ""
-    ) {
-      getInvestment()
-        .then((res) => {
-          setcollectdata(res.data.data);
-          console.log(res.data.data);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+    if (typeof window !== "undefined") {
+      if (
+        localStorage.getItem("dkz_gold_customer_token") !== undefined ||
+        localStorage.getItem("dkz_gold_customer_token") !== ""
+      ) {
+        getInvestment()
+          .then((res) => {
+            setcollectdata(res.data.data);
+            console.log(res.data.data);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
     }
     setgoldprice(props.goldPrice);
   }, []);

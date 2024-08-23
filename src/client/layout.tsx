@@ -1,10 +1,17 @@
 import Link from "next/link";
 import { serverURL } from "../stuff";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { LoginPage } from "./login";
 
 const Header = () => {
   const [showlogin, setshowlogin] = useState<boolean>(false);
+  const [token, setToken] = useState<string | null>(null);
+
+  useEffect(() => {
+    // This code runs only in the browser
+    const storedToken = localStorage.getItem("dkz_login_token");
+    setToken(storedToken);
+  }, []);
 
   const closeLogin = () => {
     setshowlogin(false);
@@ -38,7 +45,7 @@ const Header = () => {
                 <Link href="/login">Sell</Link>
               </li>
               <li className="px-4 py-2 border-b-2 border-transparent hover:border-white duration-300 cursor-pointer mx-1">
-                {localStorage.getItem("dkz_gold_customer_token") !== null ? (
+                {token ? (
                   <Link href="/transaction">Transaction</Link>
                 ) : (
                   <a onClick={shwLogin}>Transaction</a>
@@ -47,7 +54,7 @@ const Header = () => {
             </ul>
           </div>
           <div className="">
-            {localStorage.getItem("dkz_gold_customer_token") !== null ? (
+            {token ? (
               <Link href="/profile">
                 <img
                   src={serverURL + "/public/images/no-image.webp"}

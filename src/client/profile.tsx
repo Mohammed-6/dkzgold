@@ -544,12 +544,15 @@ const Wallet = (props: profileWalletProp) => {
 
   const investNow = () => {
     setloading(true);
-    console.log(localStorage.getItem("dkz_gold_customer_token"));
-    if (
-      localStorage.getItem("dkz_gold_customer_token") === null ||
-      localStorage.getItem("dkz_gold_customer_token") === ""
-    ) {
-      return;
+    // console.log(localStorage.getItem("dkz_gold_customer_token"));
+
+    if (typeof window !== "undefined") {
+      if (
+        localStorage.getItem("dkz_gold_customer_token") === null ||
+        localStorage.getItem("dkz_gold_customer_token") === ""
+      ) {
+        return;
+      }
     }
     const colte = {
       amount: amount,
