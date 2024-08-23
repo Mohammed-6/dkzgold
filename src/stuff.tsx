@@ -1,4 +1,4 @@
-export const serverURL = "http://localhost:4009";
+export const serverURL = "https://goldbackend.mariosega.in";
 
 export const serverHeaders = {
   token:
