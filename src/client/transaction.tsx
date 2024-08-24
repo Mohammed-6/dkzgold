@@ -2,8 +2,8 @@ import { CheckCircleIcon } from "@heroicons/react/16/solid";
 import { ArrowDownTrayIcon, BanknotesIcon } from "@heroicons/react/24/outline";
 import { useState, useEffect } from "react";
 import { getInvestment } from "./query/investment";
-import { downloadInvoice } from "./query/login";
-import { serverURL } from "../stuff";
+import { downloadInvoice, downloadSellInvoice } from "./query/login";
+import { Preloader, serverURL } from "../stuff";
 import Layout from "./layout";
 import Link from "next/link";
 
@@ -20,6 +20,7 @@ const Content = () => {
   const [collectdata, setcollectdata] = useState<any>();
   const [activeid, setactiveid] = useState<number>(0);
   const [activedata, setactivedata] = useState<any>();
+  const [loading, setloading] = useState<boolean>(false);
 
   useEffect(() => {
     getInvestment().then((res) => {
@@ -54,13 +55,26 @@ const Content = () => {
     // return 0;
   };
 
-  const invoiceDownload = (id: string) => {
-    downloadInvoice(id).then((res) => {
-      downloadPDF(
-        serverURL + "/public/invoice/" + res.data.data,
-        res.data.data
-      );
-    });
+  const invoiceDownload = (id: string, type: string) => {
+    setloading(true);
+    if (type === "buy") {
+      downloadInvoice(id).then((res) => {
+        downloadPDF(
+          serverURL + "/public/invoice/" + res.data.data,
+          res.data.data
+        );
+        setloading(false);
+      });
+    } else if (type === "sell") {
+      downloadSellInvoice(id).then((res) => {
+        downloadPDF(
+          serverURL + "/public/invoice/" + res.data.data,
+          res.data.data
+        );
+        setloading(false);
+      });
+    }
+    setloading(false);
   };
   function downloadPDF(url: string, filename = "downloaded.pdf") {
     // Create a hidden anchor element
@@ -81,6 +95,7 @@ const Content = () => {
   }
   return (
     <>
+      {loading ? <Preloader /> : ""}
       <Layout>
         <div className="bg-slate-800 min-h-screen">
           <div className="px-[10%] py-[1%]">
@@ -164,8 +179,64 @@ const Content = () => {
                 <div className="flex flex-col mx-auto align-middle lg:flex-row lg:justify-between bg-slate-900 bg-Background-light rounded-[20px] w-screen lg:w-[100%] p-5 justify-center lg:p-8 max-w-[1536px]">
                   <div className="flex justify-center py-5 lg:py-0">
                     <h3 className="font-normal my-auto align-middlen pr-8">
-                      <div className="flex flex-row justify-between">
-                        <BanknotesIcon className="w-8 h-8 align-middle text-white my-auto mr-3" />
+                      <div className="flex flex-row items-center gap-x-4 justify-between">
+                        <svg
+                          width="27"
+                          height="27"
+                          viewBox="0 0 27 27"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M16.2997 8.86603C16.9523 9.51869 17.3967 10.3502 17.5767 11.2554C17.7567 12.1607 17.6643 13.099 17.3111 13.9517C16.9578 14.8044 16.3597 15.5332 15.5923 16.0459C14.8249 16.5587 13.9226 16.8324 12.9997 16.8324C12.0767 16.8324 11.1745 16.5587 10.4071 16.0459C9.63965 15.5332 9.04151 14.8044 8.68828 13.9517C8.33506 13.099 8.24262 12.1607 8.42264 11.2554C8.60267 10.3502 9.04708 9.51869 9.69968 8.86603C10.133 8.43264 10.6475 8.08885 11.2137 7.8543C11.7799 7.61975 12.3868 7.49902 12.9997 7.49902C13.6126 7.49902 14.2194 7.61975 14.7856 7.8543C15.3519 8.08885 15.8663 8.43264 16.2997 8.86603"
+                            stroke="white"
+                            stroke-width="1.25"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          ></path>
+                          <path
+                            d="M1 4.25467V20.08C1.00035 20.8104 1.29073 21.5107 1.80729 22.027C2.32386 22.5433 3.02431 22.8333 3.75467 22.8333H22.2467C22.977 22.833 23.6773 22.5426 24.1937 22.026C24.71 21.5095 25 20.809 25 20.0787V4.25467C25 3.52408 24.7098 2.82342 24.1932 2.30682C23.6766 1.79022 22.9759 1.5 22.2453 1.5H3.75467C3.02408 1.5 2.32342 1.79022 1.80682 2.30682C1.29022 2.82342 1 3.52408 1 4.25467V4.25467Z"
+                            stroke="white"
+                            stroke-width="1.25"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          ></path>
+                          <path
+                            d="M12.1328 13.0991L13.8661 11.2324"
+                            stroke="white"
+                            stroke-width="1.25"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          ></path>
+                          <path
+                            d="M3.6665 25.4997V22.833"
+                            stroke="white"
+                            stroke-width="1.25"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          ></path>
+                          <path
+                            d="M22.333 25.4997V22.833"
+                            stroke="white"
+                            stroke-width="1.25"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          ></path>
+                          <path
+                            d="M24.9995 5.5H26.3328"
+                            stroke="white"
+                            stroke-width="1.25"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          ></path>
+                          <path
+                            d="M24.9995 17.5H26.3328"
+                            stroke="white"
+                            stroke-width="1.25"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          ></path>
+                        </svg>
                         <div className="flex flex-col">
                           <span className="inline text-white pb-2">
                             Gold in locker
@@ -244,11 +315,24 @@ const Content = () => {
                             >
                               <div className="flex gap-x-4 items-center">
                                 <div>
-                                  <BanknotesIcon className="w-10 text-yellow-600" />
+                                  {data.goldType === "buy" ? (
+                                    <img
+                                      src="https://cdn.myjar.app/TransactionScreenIcons/buyGold.png"
+                                      width="40"
+                                    />
+                                  ) : (
+                                    <BanknotesIcon className="w-10 text-green-600" />
+                                  )}
                                 </div>
                                 <div className="flex justify-between w-full">
                                   <div className="text-white">
-                                    <div className="">Manual Gold Purchase</div>
+                                    <div className="">
+                                      {data.goldType === "buy"
+                                        ? "Manual Gold Purchase"
+                                        : data.goldType === "sell"
+                                        ? "Gold sold"
+                                        : ""}
+                                    </div>
                                     <div className="text-slate-500 text-xs py-1">
                                       {data.grams}gms Gold
                                     </div>
@@ -278,7 +362,11 @@ const Content = () => {
                       <div className="w-full flex text-white justify-between py-5 border-opacity-3 border-solid border-[#776E94] border-b-[0.2px]">
                         <div className="flex flex-col">
                           <span className="overflow-hidden truncate w-50 font-bold lg:w-full">
-                            Manual Gold Purchase
+                            {activedata?.goldType === "buy"
+                              ? "Manual Gold Purchase"
+                              : activedata?.goldType === "sell"
+                              ? "Gold sold"
+                              : ""}
                           </span>
                           <span className="overflow-hidden truncate w-40 lg:w-fit text-Text-600">
                             {activedata?.grams} gm
@@ -297,58 +385,133 @@ const Content = () => {
                         <span>Transaction Status</span>
                       </div>
                       <div className="">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-x-2">
-                            <div className="">
-                              <CheckCircleIcon className="w-5 h-5 stroke-green-500 fill-green-500" />
+                        {activedata?.goldType === "buy" ? (
+                          <>
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-x-2">
+                                <div className="">
+                                  <CheckCircleIcon className="w-5 h-5 stroke-green-500 fill-green-500" />
+                                </div>
+                                <div className="text-white text-xs">
+                                  Payment Successfull
+                                </div>
+                              </div>
+                              <div className="">
+                                <span className="text-gray-400 text-sm font-normal">
+                                  {formatDate(activedata?.created)}
+                                </span>
+                              </div>
                             </div>
-                            <div className="text-white text-xs">
-                              Payment Successfull
+                            <div className="h-3 max-w-5 ml-2 w-[1px] bg-white"></div>
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-x-2">
+                                <div className="">
+                                  <CheckCircleIcon className="w-5 h-5 stroke-green-500 fill-green-500" />
+                                </div>
+                                <div className="text-white text-xs">
+                                  Gold order placed
+                                </div>
+                              </div>
+                              <div className="">
+                                <span className="text-gray-400 text-sm font-normal">
+                                  {formatDate(activedata?.created)}
+                                </span>
+                              </div>
                             </div>
-                          </div>
-                          <div className="">
-                            <span className="text-gray-400 text-sm font-normal">
-                              {formatDate(activedata?.created)}
-                            </span>
-                          </div>
-                        </div>
-                        <div className="h-3 max-w-5 ml-2 w-[1px] bg-white"></div>
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-x-2">
-                            <div className="">
-                              <CheckCircleIcon className="w-5 h-5 stroke-green-500 fill-green-500" />
-                            </div>
-                            <div className="text-white text-xs">
-                              Gold order placed
-                            </div>
-                          </div>
-                          <div className="">
-                            <span className="text-gray-400 text-sm font-normal">
-                              {formatDate(activedata?.created)}
-                            </span>
-                          </div>
-                        </div>
 
-                        <div className="h-3 max-w-5 ml-2 w-[1px] bg-white"></div>
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-x-2">
-                            <div className="">
-                              <CheckCircleIcon className="w-5 h-5 stroke-green-500 fill-green-500" />
+                            <div className="h-3 max-w-5 ml-2 w-[1px] bg-white"></div>
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-x-2">
+                                <div className="">
+                                  <CheckCircleIcon className="w-5 h-5 stroke-green-500 fill-green-500" />
+                                </div>
+                                <div className="text-white text-xs">
+                                  Gold purchased
+                                </div>
+                              </div>
+                              <div className="">
+                                <span className="text-gray-400 text-sm font-normal">
+                                  {formatDate(activedata?.created)}
+                                </span>
+                              </div>
                             </div>
-                            <div className="text-white text-xs">
-                              Gold purchased
+                          </>
+                        ) : activedata?.goldType === "sell" ? (
+                          <>
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-x-2">
+                                <div className="">
+                                  <CheckCircleIcon className="w-5 h-5 stroke-green-500 fill-green-500" />
+                                </div>
+                                <div className="text-white text-xs">
+                                  Withdrawal requested
+                                </div>
+                              </div>
+                              <div className="">
+                                <span className="text-gray-400 text-sm font-normal">
+                                  {formatDate(activedata?.created)}
+                                </span>
+                              </div>
                             </div>
-                          </div>
-                          <div className="">
-                            <span className="text-gray-400 text-sm font-normal">
-                              {formatDate(activedata?.created)}
-                            </span>
-                          </div>
-                        </div>
+                            <div className="h-3 max-w-5 ml-2 w-[1px] bg-white"></div>
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-x-2">
+                                <div className="">
+                                  <CheckCircleIcon className="w-5 h-5 stroke-green-500 fill-green-500" />
+                                </div>
+                                <div className="text-white text-xs">
+                                  Gold sell order placed
+                                </div>
+                              </div>
+                              <div className="">
+                                <span className="text-gray-400 text-sm font-normal">
+                                  {formatDate(activedata?.created)}
+                                </span>
+                              </div>
+                            </div>
+
+                            <div className="h-3 max-w-5 ml-2 w-[1px] bg-white"></div>
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-x-2">
+                                <div className="">
+                                  <CheckCircleIcon className="w-5 h-5 stroke-green-500 fill-green-500" />
+                                </div>
+                                <div className="text-white text-xs">
+                                  Gold sell
+                                </div>
+                              </div>
+                              <div className="">
+                                <span className="text-gray-400 text-sm font-normal">
+                                  {formatDate(activedata?.created)}
+                                </span>
+                              </div>
+                            </div>
+                            <div className="h-3 max-w-5 ml-2 w-[1px] bg-white"></div>
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-x-2">
+                                <div className="">
+                                  <CheckCircleIcon className="w-5 h-5 stroke-green-500 fill-green-500" />
+                                </div>
+                                <div className="text-white text-xs">
+                                  Money added to wallet
+                                </div>
+                              </div>
+                              <div className="">
+                                <span className="text-gray-400 text-sm font-normal">
+                                  {formatDate(activedata?.created)}
+                                </span>
+                              </div>
+                            </div>
+                          </>
+                        ) : (
+                          ""
+                        )}
                       </div>
                       <button
                         className="bg-blue-500 my-6 text-base font-semibold py-4 px-6 w-59 h-15 text-center rounded-lg justify-center"
-                        onClick={() => invoiceDownload(activedata.id)}
+                        onClick={() =>
+                          invoiceDownload(activedata.id, activedata?.goldType)
+                        }
                       >
                         <span className="text-sm text-NewText-primary font-semibold font-Inter text-normal leading-[14px]">
                           <div className="flex flex-row">
